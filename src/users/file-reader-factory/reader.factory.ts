@@ -11,9 +11,6 @@ export class FileReaderFactory{
         'csv':1
     }
 
-    constructor(){
-    }
-
     async create(file:Express.Multer.File){
         const ext = file.originalname.split('.').pop();
         if(!this.fileMimeType[ext]){

@@ -14,22 +14,45 @@ export class UsersService {
   ){}
 
   async create(createUserDto: CreateUserDto) {
-    return await this.userModel.create({userDetails: createUserDto});
+    await this.userModel.create({userDetails: createUserDto});
+    const userList = await this.userModel.find({}).limit(10).sort('-_id');
+    return this.processData(userList);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const userList = await this.userModel.find({}).limit(10).sort('-_id');
+    return this.processData(userList);
   }
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    return ""
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userModel.findByIdAndDelete(id);
+    const userList = await this.userModel.find({}).limit(10).sort('-_id');
+    return this.processData(userList);
+  }
+
+  processData(userList:User[]){
+    const headers = new Set();
+    const users = [];
+    userList.forEach(user=>{
+      const keys = Object.keys(user.userDetails);
+      users.push({...user.userDetails, id: user._id});
+      keys.forEach(key=>{
+        headers.add(key);
+      })
+    })
+    const listHeaders = Array.from(headers);
+    const response = {
+      headers : listHeaders,
+      users: users
+    }
+    return response;
   }
 }

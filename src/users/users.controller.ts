@@ -16,7 +16,6 @@ export class UsersController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
-    @Body() createUserDto: CreateUserDto,
     @UploadedFile() file: Express.Multer.File
   ) {
     const data = await this.fileReaderFactory.create(file);
@@ -40,6 +39,6 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }
