@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, Query, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {Express} from 'express'
+import {Express ,Request} from 'express'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileReaderFactory } from './file-reader-factory/reader.factory';
 
@@ -25,6 +24,11 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Post('searchUser')
+  searchUser(@Req() req: Request) {
+    return this.usersService.searchUser(req.body);
   }
 
   @Get(':id')

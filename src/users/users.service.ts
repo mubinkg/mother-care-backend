@@ -38,6 +38,16 @@ export class UsersService {
     return this.processData(userList);
   }
 
+  async searchUser(query:Record<string, any>){
+    const generatedQuery = {};
+    if(query){
+      const key = Object.keys(query)[0];
+      generatedQuery[`userDetails.${key}`] = {$regex:query[key], $options: 'i'}
+    }
+    const userList = await this.userModel.find(generatedQuery).limit(5);
+    return this.processData(userList);
+  }
+
   processData(userList:User[]){
     const headers = new Set();
     const users = [];
